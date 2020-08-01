@@ -83,8 +83,10 @@ public class Knife : MonoBehaviour
     {
         Moving = false;
 
-        if(collision.gameObject.name.Equals("shield"))
-        transform.SetParent(collision.gameObject.transform);
+        if (collision.gameObject.name.Equals("shield"))
+            transform.SetParent(collision.gameObject.transform);
+        else if (collision.gameObject.name.Equals("kunai"))
+            Destroy(gameObject);
     }
 
 }
