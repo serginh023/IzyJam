@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Core\Knife.cs" />
     <Compile Include="Assets\Scripts\Core\Shield.cs" />
     <Compile Include="Assets\Scripts\Managers\GameController.cs" />
+    <Compile Include="Assets\Scripts\Managers\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Managers\Pool.cs" />
     <Compile Include="Assets\Scripts\Utility\DestroyWhenBecomeInvisible.cs" />
     <Reference Include="UnityEngine">

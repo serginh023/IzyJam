@@ -18,6 +18,11 @@ public class GameController : MonoBehaviour
     [SerializeField]
     Apple m_Apple;
 
+    [SerializeField]
+    GameObject m_panelGameOver;
+    [SerializeField]
+    GameObject m_panelPause;
+
     public int appleCount = 0;
 
     public Knife currentActiveKnife;
@@ -25,22 +30,27 @@ public class GameController : MonoBehaviour
     int m_knivesHited = 0;
     int m_knivesThrowed = 0;
 
+    bool m_isPaused;
+
     private void Start()
     {
-        currentActiveKnife = currentActiveKnife = Pool.singleton.Get("knife").GetComponent<Knife>();
-        currentActiveKnife.gameObject.SetActive(true);
-        currentActiveKnife.gameObject.transform.position = m_KunaiStartPosition;
-        currentActiveKnife.Awaking(m_KunaiPosition);
+        GetNewKnife();
+
+        m_isPaused = false;
+
+        Time.timeScale = 1;
+
+        m_panelGameOver.SetActive(m_isPaused);
 
         m_Target = Instantiate(m_Target, m_TargetPosition, Quaternion.identity) as Shield;
 
-        for(int i = 0; i < appleCount; i++)
+        for (int i = 0; i < appleCount; i++)
         {
             int angle = Random.Range(0, 180);
 
-            float x = m_TargetPosition.x + 0.35f * Mathf.Cos(angle);
+            float x = m_TargetPosition.x + 1.9f * Mathf.Cos(angle);
 
-            float y = m_TargetPosition.y + 0.35f * Mathf.Sin(angle);
+            float y = m_TargetPosition.y + 1.9f * Mathf.Sin(angle);
 
             Vector3 applePosition = new Vector3(x, y, 0);
 
@@ -50,6 +60,15 @@ public class GameController : MonoBehaviour
         }
 
         StartCoroutine(StartGame());
+    }
+
+    private void GetNewKnife()
+    {
+        currentActiveKnife = Pool.singleton.Get("knife").GetComponent<Knife>();
+        currentActiveKnife.gameObject.SetActive(true);
+        currentActiveKnife.isActive = true;
+        currentActiveKnife.gameObject.transform.position = m_KunaiStartPosition;
+        currentActiveKnife.Awaking(m_KunaiPosition);
     }
 
     IEnumerator StartGame()
@@ -64,10 +83,7 @@ public class GameController : MonoBehaviour
     public void ThrowKnife()
     {
         currentActiveKnife.Throw();
-        currentActiveKnife = Pool.singleton.Get("knife").GetComponent<Knife>();
-        currentActiveKnife.gameObject.SetActive(true);
-        currentActiveKnife.gameObject.transform.position = m_KunaiStartPosition;
-        currentActiveKnife.Awaking(m_KunaiPosition);
+        GetNewKnife();
         m_knivesThrowed++;
     }
 
@@ -78,7 +94,34 @@ public class GameController : MonoBehaviour
 
     void GameOver()
     {
+        togglePause();
+        m_panelGameOver.SetActive(m_isPaused);
         Debug.Log("Game over!");
+    }
+
+    void togglePause()
+    {
+        m_isPaused = !m_isPaused;
+
+        if(m_isPaused)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    public void Pause()
+    {
+        togglePause();
+        m_panelPause.SetActive(m_isPaused);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Pause();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            ThrowKnife();
     }
 
     private void OnEnable()

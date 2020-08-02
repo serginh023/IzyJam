@@ -8,6 +8,7 @@ public class Knife : MonoBehaviour
     public float Speed = 12.5f;
     public bool IsMoving;
     public bool IsAwaking;
+    public bool isActive = true;
     Vector3 m_startPosition;
 
     public delegate void KnifeHitEventHandler();
@@ -47,18 +48,23 @@ public class Knife : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "shield(Clone)")
+        if (isActive)
         {
-            IsMoving = false;
-            transform.SetParent(collision.gameObject.transform);
-            if (HitEvent != null)
-                HitEvent();
-
-        }
-        else if (collision.gameObject.name == "kunai(Clone)")
-        {
-            if (HitEvent != null)
-                CrashEvent();
+            if (collision.gameObject.name == "shield(Clone)")
+            {
+                IsMoving = false;
+                transform.SetParent(collision.gameObject.transform);
+                if (HitEvent != null)
+                    HitEvent();
+                isActive = false;
+            }
+            else if (collision.gameObject.name == "kunai(Clone)")
+            {
+                if (HitEvent != null)
+                    CrashEvent();
+                gameObject.SetActive(false);
+            }
+                
         }
             
     }
