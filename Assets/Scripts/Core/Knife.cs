@@ -11,9 +11,10 @@ public class Knife : MonoBehaviour
     public bool isActive = true;
     Vector3 m_startPosition;
 
-    public delegate void KnifeHitEventHandler();
+    public delegate void KnifeHitEventHandler(HitType hitType);
     public static event KnifeHitEventHandler HitEvent;
-    public static event KnifeHitEventHandler CrashEvent;
+    public delegate void KnifeCrashEventHandler();
+    public static event KnifeCrashEventHandler CrashEvent;
 
 
     void Start()
@@ -50,19 +51,23 @@ public class Knife : MonoBehaviour
     {
         if (isActive)
         {
-            if (collision.gameObject.name == "shield(Clone)")
+            if (collision.gameObject.tag == "target")
             {
                 IsMoving = false;
                 transform.SetParent(collision.gameObject.transform);
                 if (HitEvent != null)
-                    HitEvent();
+                    HitEvent(HitType.simpleHit);
                 isActive = false;
             }
-            else if (collision.gameObject.name == "kunai(Clone)")
+            else if (collision.gameObject.tag == "knife")
             {
                 if (HitEvent != null)
                     CrashEvent();
                 gameObject.SetActive(false);
+            }else if (collision.gameObject.tag == "apple")
+            {
+                if (HitEvent != null)
+                    HitEvent(HitType.appleHit);
             }
                 
         }

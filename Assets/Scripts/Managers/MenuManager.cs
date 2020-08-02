@@ -11,6 +11,11 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void GamePlayLevel()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     public void ReloadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

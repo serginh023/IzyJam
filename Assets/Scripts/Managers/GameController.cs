@@ -22,6 +22,11 @@ public class GameController : MonoBehaviour
     GameObject m_panelGameOver;
     [SerializeField]
     GameObject m_panelPause;
+    [SerializeField]
+    GameObject m_panelWin;
+
+    [SerializeField]
+    ScoreManager m_scoreManager;
 
     public int appleCount = 0;
 
@@ -64,16 +69,24 @@ public class GameController : MonoBehaviour
 
     private void GetNewKnife()
     {
-        currentActiveKnife = Pool.singleton.Get("knife").GetComponent<Knife>();
-        currentActiveKnife.gameObject.SetActive(true);
-        currentActiveKnife.isActive = true;
-        currentActiveKnife.gameObject.transform.position = m_KunaiStartPosition;
-        currentActiveKnife.Awaking(m_KunaiPosition);
+        currentActiveKnife = null;
+        GameObject newKnife = Pool.singleton.Get("knife");
+        
+        if (newKnife != null)
+        {
+            currentActiveKnife = newKnife.GetComponent<Knife>();
+            currentActiveKnife.gameObject.SetActive(true);
+            currentActiveKnife.isActive = true;
+            currentActiveKnife.gameObject.transform.position = m_KunaiStartPosition;
+            currentActiveKnife.Awaking(m_KunaiPosition);
+        }
+
     }
 
     IEnumerator StartGame()
     {
-        yield return new WaitForSeconds(3f);
+
+        yield return new WaitForSeconds(1.2f);
 
         m_Target.rotate = true;
 
@@ -87,9 +100,15 @@ public class GameController : MonoBehaviour
         m_knivesThrowed++;
     }
 
-    void Hited()
+    void Hited(HitType hitType)
     {
         m_knivesHited++;
+        m_scoreManager.Score(hitType);
+        if (m_knivesHited>= 7 && currentActiveKnife == null)
+        {
+            togglePause();
+            m_panelWin.SetActive(m_isPaused);
+        }
     }
 
     void GameOver()
