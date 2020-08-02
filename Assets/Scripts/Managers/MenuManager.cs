@@ -13,7 +13,20 @@ public class MenuManager : MonoBehaviour
 
     public void GamePlayLevel()
     {
+        LevelHelper.CurrentLevel = 0;
         SceneManager.LoadScene(1);
+    }
+
+    public void LoadNextLevel()
+    {
+        Object[] levels = Resources.LoadAll("ScriptableLevels");
+
+        LevelHelper.CurrentLevel++;
+
+        if (LevelHelper.CurrentLevel + 1 > levels.Length)
+            LoadMainLevel();
+        else 
+            SceneManager.LoadScene(1);
     }
 
     public void ReloadLevel()

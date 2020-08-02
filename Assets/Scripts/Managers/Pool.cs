@@ -43,17 +43,23 @@ public class Pool : MonoBehaviour
         return null;
     }
 
-    private void Start()
+
+    public void PopulatePool(Level level)
     {
         pooledItems = new List<GameObject>();
 
         foreach (PoolItem item in items)
-        
-            for(int i = 0; i < item.amount; i++)
+        {
+            if (item.prefab.gameObject.tag == "knife")
+                item.amount = level.knivesCount;
+
+            for (int i = 0; i < item.amount; i++)
             {
                 GameObject go = Instantiate(item.prefab);
                 go.SetActive(false);
                 pooledItems.Add(go);
             }
+
+        }
     }
 }

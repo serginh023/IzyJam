@@ -65,12 +65,15 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Core\Apple.cs" />
     <Compile Include="Assets\Scripts\Core\Knife.cs" />
+    <Compile Include="Assets\Scripts\Core\Level.cs" />
     <Compile Include="Assets\Scripts\Core\Shield.cs" />
     <Compile Include="Assets\Scripts\Managers\GameController.cs" />
     <Compile Include="Assets\Scripts\Managers\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Managers\Pool.cs" />
     <Compile Include="Assets\Scripts\Managers\ScoreManager.cs" />
     <Compile Include="Assets\Scripts\Utility\DestroyWhenBecomeInvisible.cs" />
+    <Compile Include="Assets\Scripts\Utility\DontDestroyOnLoad.cs" />
+    <Compile Include="Assets\Scripts\Utility\LevelHelper.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity2018.3.11f1/Editor/2019.4.5f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

@@ -28,20 +28,35 @@ public class GameController : MonoBehaviour
     [SerializeField]
     ScoreManager m_scoreManager;
 
-    public int appleCount = 0;
+    int appleCount = 0;
 
     public Knife currentActiveKnife;
 
     int m_knivesHited = 0;
-    int m_knivesThrowed = 0;
 
     bool m_isPaused;
 
+    Level m_currentLevel;
+
+    bool isPlaying = true;
+
     private void Start()
     {
+        Object[] levels; 
+        
+        levels = Resources.LoadAll("ScriptableLevels", typeof(Level));
+
+        m_currentLevel = (Level)levels[LevelHelper.CurrentLevel];
+
+        appleCount = m_currentLevel.appleCount;
+
+        Pool.singleton.PopulatePool(m_currentLevel);
+
         GetNewKnife();
 
         m_isPaused = false;
+
+        isPlaying = true;
 
         Time.timeScale = 1;
 
@@ -95,16 +110,18 @@ public class GameController : MonoBehaviour
 
     public void ThrowKnife()
     {
-        currentActiveKnife.Throw();
-        GetNewKnife();
-        m_knivesThrowed++;
+        if (currentActiveKnife != null)
+        {
+            currentActiveKnife.Throw();
+            GetNewKnife();
+        }
     }
 
     void Hited(HitType hitType)
     {
         m_knivesHited++;
         m_scoreManager.Score(hitType);
-        if (m_knivesHited>= 7 && currentActiveKnife == null)
+        if (m_knivesHited>= m_currentLevel.minKnivesHitCount && currentActiveKnife == null)
         {
             togglePause();
             m_panelWin.SetActive(m_isPaused);
@@ -121,8 +138,9 @@ public class GameController : MonoBehaviour
     void togglePause()
     {
         m_isPaused = !m_isPaused;
+        isPlaying = !m_isPaused;
 
-        if(m_isPaused)
+        if (m_isPaused)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
@@ -139,7 +157,7 @@ public class GameController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
             Pause();
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && isPlaying)
             ThrowKnife();
     }
 
