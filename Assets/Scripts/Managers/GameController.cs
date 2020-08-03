@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿    using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -28,11 +29,20 @@ public class GameController : MonoBehaviour
     [SerializeField]
     ScoreManager m_scoreManager;
 
+    [SerializeField]
+    Text m_knivesRemaingText;
+    [SerializeField]
+    Text m_currentLevelText;
+
     int appleCount = 0;
 
     public Knife currentActiveKnife;
 
     int m_knivesHited = 0;
+
+    int m_knivesThrowed = 0;
+
+    int m_totalKnives = 0;
 
     bool m_isPaused;
 
@@ -51,6 +61,12 @@ public class GameController : MonoBehaviour
         appleCount = m_currentLevel.appleCount;
 
         Pool.singleton.PopulatePool(m_currentLevel);
+
+        m_totalKnives = m_currentLevel.knivesCount;
+
+        RefreshKnivesHUD();
+
+        RefreshLevelHUD();
 
         GetNewKnife();
 
@@ -110,11 +126,25 @@ public class GameController : MonoBehaviour
 
     public void ThrowKnife()
     {
+
         if (currentActiveKnife != null)
         {
+            m_knivesThrowed++;
+            RefreshKnivesHUD();
             currentActiveKnife.Throw();
             GetNewKnife();
         }
+    }
+
+    void RefreshKnivesHUD()
+    {
+        int knivesRemaing = m_totalKnives - m_knivesThrowed;
+        m_knivesRemaingText.text = "x " + knivesRemaing.ToString();
+    }
+
+    void RefreshLevelHUD()
+    {
+        m_currentLevelText.text = m_currentLevel.id.ToString();
     }
 
     void Hited(HitType hitType)
