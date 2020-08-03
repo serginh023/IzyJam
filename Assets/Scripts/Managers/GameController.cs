@@ -130,6 +130,10 @@ public class GameController : MonoBehaviour
         if (currentActiveKnife != null)
         {
             m_knivesThrowed++;
+            if (m_knivesThrowed > m_totalKnives)
+            {
+                GameOver();
+            }
             RefreshKnivesHUD();
             currentActiveKnife.Throw();
             GetNewKnife();
@@ -195,12 +199,14 @@ public class GameController : MonoBehaviour
     {
         Knife.HitEvent += Hited;
         Knife.CrashEvent += GameOver;
+        TouchManager.TouchEvent += ThrowKnife;
     }
 
     private void OnDisable()
     {
         Knife.HitEvent -= Hited;
         Knife.CrashEvent -= GameOver;
+        TouchManager.TouchEvent -= ThrowKnife;
     }
 
 }
